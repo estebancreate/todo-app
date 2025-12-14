@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Todo App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
+    }
+    li.done {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Todo App</h1>
+
+  <input id="todoInput" placeholder="What to do?" />
+  <button onclick="addTodo()">Add</button>
+
+  <ul id="todoList"></ul>
+
+  <script>
+    const input = document.getElementById("todoInput");
+    const list = document.getElementById("todoList");
+  
+    let todos = JSON.parse(localStorage.getItem("todos")) || [];
+  
+    function renderTodos() {
+      list.innerHTML = "";
+  
+      todos.forEach((text, index) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+  
+        li.onclick = () => {
+          li.classList.toggle("done");
+        };
+  
+        const del = document.createElement("button");
+        del.textContent = "❌";
+        del.onclick = () => {
+          todos.splice(index, 1);
+          saveTodos();
+        };
+  
+        li.appendChild(del);
+        list.appendChild(li);
+      });
+    }
+  
+    function saveTodos() {
+      localStorage.setItem("todos", JSON.stringify(todos));
+      renderTodos();
+    }
+  
+    function addTodo() {
+      if (input.value === "") return;
+  
+      todos.push(input.value);
+      input.value = "";
+      saveTodos();
+    }
+  
+    renderTodos();
+  </script>
+</body>
+</html>
